@@ -1,74 +1,39 @@
-# name: 'N1 - Execução Manual'
-
-# on:
-#   workflow_dispatch:
-
-# jobs:
-#   #descrição do Job
-#   e2e-tests:
-#     # maquina que o job vai executar
-#     runs-on: ['ubuntu-latest']
-
-#     # passo a passo das ações do job
-#     steps:
-#       - uses: actions/checkout@v4
-
-#       # - uses: actions/setup-node@v4
-#       #   with:
-#       #     node-version: lts/*
-
-#       - name: Instalando Yarn
-#         run: npm install -g yarn
-
-#       - name: Instalando dependências
-#         run: yarn
-
-#       - name: Instalando Cypress
-#         run: yarn cypress install
-
-#       - name: Testes E2E (end-to-end)
-#         run: yarn cypress run
-
-#       # passed, failed, cancelled
-#       - uses: actions/upload-artifact@v4
-#         if: ${{ !cancelled() }}
-#         with:
-#           name: relatorio-de-testes
-#           path: ./cypress/reports/html
-
-
-name: 'N1 Manual Execution'
+name: 'N1 - Execução Manual'
 
 on:
   workflow_dispatch:
 
 jobs:
+  #descrição do Job
   e2e-tests:
-    runs-on: ubuntu-latest
+    # maquina que o job vai executar
+    runs-on: ['ubuntu-latest']
 
+    # passo a passo das ações do job
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Yarn
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: lts/*
+
+      - name: Instalando Yarn
         run: npm install -g yarn
 
-      - name: Install dependencies
+      - name: Instalando dependências
         run: yarn
 
-      - name: E2E Test
+      - name: Instalando Cypress
+        run: yarn cypress install
+
+      - name: Testes E2E (end-to-end)
         run: yarn cypress run
 
+      # passed, failed, cancelled
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: tests_reports
+          name: relatorio-de-testes
           path: ./cypress/reports/html
 
-      - name: Notify Discord
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          TARGET_BRANCH: ${{ secrets.TARGET_BRANCH }}
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{"content": "Manual Pipeline! ✅ \nStatus: `${{ job.status }}` \nAuthor: @${{ github.actor }}"}' \
-          $DISCORD_WEBHOOK_URL
+
