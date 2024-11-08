@@ -3,6 +3,7 @@ name: 'Execução Agendada'
 on:
   schedule:
     # https://crontab.guru/#
+    # Todos os dias 19:39:00
     - cron: '39 19 * * *'
 
 jobs:
