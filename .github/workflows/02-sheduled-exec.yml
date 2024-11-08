@@ -1,12 +1,14 @@
-name: 'N1 - Execução Manual'
+name: 'Execução Agendada'
 
 on:
-  workflow_dispatch:
+  schedule:
+    # https://crontab.guru/#
+    - cron: '39 19 * * *'
 
 jobs:
-
+ 
   e2e-tests:
-
+    
     runs-on: ['ubuntu-latest']
 
     steps:
@@ -29,5 +31,3 @@ jobs:
         with:
           name: relatorio-de-testes
           path: ./cypress/reports/html
-
-

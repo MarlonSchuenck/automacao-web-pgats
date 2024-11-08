@@ -1,13 +1,18 @@
-name: 'N1 - Execução Manual'
+name: 'Execução por Deploy'
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ['Execução Manual']
+    types:
+      - completed
 
 jobs:
-
+ 
   e2e-tests:
-
+  
     runs-on: ['ubuntu-latest']
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -29,5 +34,3 @@ jobs:
         with:
           name: relatorio-de-testes
           path: ./cypress/reports/html
-
-

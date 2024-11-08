@@ -1,0 +1,74 @@
+name: 'Execução Integrada'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  inspection:
+    runs-on: ['ubuntu-latest']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalando Yarn
+        run: npm install -g yarn
+
+      - name: Instalando dependências
+        run: yarn
+
+      - name: Padronizacao de codigo (Lint / Prettier)
+        run: yarn lint
+
+  unit:
+    runs-on: ['ubuntu-latest']
+    needs: [inspection]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalando Yarn
+        run: npm install -g yarn
+
+      - name: Instalando dependências
+        run: yarn
+
+      - name: Testes de Unidade
+        run: yarn run test
+
+  e2e-tests:
+
+    runs-on: ['ubuntu-latest']
+    needs: [unit]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalando Yarn
+        run: npm install -g yarn
+
+      - name: Instalando dependências
+        run: yarn
+
+      - name: Instalando Playwright
+        run: yarn cypress install
+
+      - name: Subir aplicacao local
+        run: yarn start &
+
+      - name: Testes E2E (end-to-end)
+        run: yarn cypress run
+        env:
+          URL: 'http://localhost:3000'
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: relatorio-de-testes
+          path: ./cypress/reports/html
+
+  deploy:
+    runs-on: ['ubuntu-latest']
+    needs: [e2e-tests]
+
+    steps:
+      - name: Deploy
+        run: echo "step deploy"
